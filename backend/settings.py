@@ -31,7 +31,7 @@ DEBUG = True
 # Generally avoid wildcards(*). However since Heroku router provides hostname validation it is ok
 IS_HEROKU = "DYNO" in os.environ
 if IS_HEROKU:
-    ALLOWED_HOSTS = ["*"]
+    ALLOWED_HOSTS = [""]
 else:
     ALLOWED_HOSTS = []
 
@@ -149,7 +149,11 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://6440bd4f4a3a2c2fcc987b04--astonishing-kitten-ce044b.netlify.app/",
+    "http://127.0.0.1:9000",
+]
+
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'US/Pacific'
 USE_I18N = True

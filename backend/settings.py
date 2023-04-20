@@ -11,11 +11,14 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-
+import dj_database_url
+import django_heroku
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+STATIC_URL ='static/'
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
-
+django_heroku.setttings(locals())
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -24,12 +27,16 @@ SECRET_KEY = 'django-insecure-!^m_yaowa4a9!=!k$+b!d*%fr=y(jd0xswn3u&)m9a94-*+!4=
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# Generally avoid wildcards(*). However since Heroku router provides hostname validation it is ok
+IS_HEROKU = "DYNO" in os.environ
+if IS_HEROKU:
+    ALLOWED_HOSTS = ["*"]
+else:
+    ALLOWED_HOSTS = []
 
-ALLOWED_HOSTS = [
-    'http://backend-dev22.us-west-2.elasticbeanstalk.com/',
-    'backend-dev22.us-west-2.elasticbeanstalk.com',
-    '127.0.0.1',
-]
+# SECURITY WARNING: don't run with debug turned on in production!
+if not IS_HEROKU:
+    DEBUG = True
 
 
 # Application definition
@@ -145,17 +152,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ]
 import os
 
-if 'RDS_HOSTNAME' in os.environ:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ['RDS_DB_NAME'],
-            'USER': os.environ['RDS_USERNAME'],
-            'PASSWORD': os.environ['RDS_PASSWORD'],
-            'HOST': os.environ['RDS_HOSTNAME'],
-            'PORT': os.environ['RDS_PORT'],
-        }
-    }
 CORS_ALLOW_ALL_ORIGINS = True
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'US/Pacific'
